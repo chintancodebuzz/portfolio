@@ -47,10 +47,10 @@ const Experience = () => {
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-12 lg:gap-16">
           {/* Left: Timeline */}
           <div
-            className={`space-y-8 transition-all duration-1000 delay-200 ease-out ${
+            className={`space-y-8 transition-all duration-1000 delay-200 ease-out pfoot${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"

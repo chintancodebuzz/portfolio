@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
+import { Link } from "react-scroll";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,35 +13,25 @@ export default function Navbar() {
     { id: "services", label: "Services" },
     { id: "projects", label: "Projects" },
     { id: "resume", label: "Resume" },
+    { id: "contact", label: "Contact" },
   ];
 
-  // Scroll to section with offset and update URL
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const navbarHeight = 80;
-      const elementPosition =
-        element.getBoundingClientRect().top + window.scrollY - navbarHeight;
+  // Scroll detection for navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
 
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth",
-      });
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-      // Update URL hash
-      window.history.pushState(null, "", `/#${sectionId}`);
-      setActiveSection(sectionId);
-    }
-    setIsOpen(false);
-  };
-
-  // Scroll detection for navbar animation
+  // Set active section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100;
-      setIsScrolled(window.scrollY > 50);
 
-      let current = "";
+      let current = "home";
       for (const item of navItems) {
         const section = document.getElementById(item.id);
         if (section) {
@@ -55,31 +46,12 @@ export default function Navbar() {
         }
       }
 
-      if (current && current !== activeSection) {
-        setActiveSection(current);
-        window.history.replaceState(null, "", `/#${current}`);
-      }
+      setActiveSection(current);
     };
 
-    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeSection]);
-
-  // Optional: Handle popstate (back/forward buttons)
-  useEffect(() => {
-    const handlePopState = () => {
-      const hash = window.location.hash.slice(1);
-      if (hash && navItems.some((item) => item.id === hash)) {
-        scrollToSection(hash);
-      } else {
-        scrollToSection("home");
-      }
-    };
-
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [navItems]);
 
   return (
     <nav
@@ -89,10 +61,14 @@ export default function Navbar() {
     >
       <div className="px-4 w-[90%] sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo with hover animation */}
-          <button
-            onClick={() => scrollToSection("home")}
-            className="flex-shrink-0 transition-all duration-300 hover:scale-110 hover:rotate-12"
+          {/* Logo */}
+          <Link
+            to="home"
+            spy={true}
+            smooth={true}
+            offset={-80}
+            duration={800}
+            className="flex-shrink-0 transition-all duration-300 hover:scale-110 hover:rotate-12 cursor-pointer"
           >
             <img
               src="/src/assets/images/icons/logo/nav_logo.svg"
@@ -103,18 +79,23 @@ export default function Navbar() {
                 isScrolled ? "h-8" : "h-10"
               }`}
             />
-          </button>
+          </Link>
 
-          {/* Desktop Navigation with enhanced animations */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-[50px]">
             {navItems.map((item, index) => (
-              <button
+              <Link
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`text-[18px] font-medium transition-all duration-300 cursor-pointer relative group ${
+                to={item.id}
+                spy={true}
+                smooth={true}
+                offset={-80}
+                duration={800}
+                onSetActive={() => setActiveSection(item.id)}
+                className={`text-[18px] font-medium transition-all duration-300 cursor-pointer relative group px-1 ${
                   activeSection === item.id
-                    ? "text-blue-500 scale-105"
-                    : "text-gray-700 hover:text-blue-500"
+                    ? "text-[#4FC3F7] scale-105"
+                    : "text-gray-700 hover:text-[#4FC3F7]"
                 }`}
                 style={{
                   animationDelay: `${index * 100}ms`,
@@ -124,24 +105,31 @@ export default function Navbar() {
 
                 {/* Animated underline */}
                 <span
-                  className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full ${
+                  className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#4FC3F7] transition-all duration-300 group-hover:w-full ${
                     activeSection === item.id ? "w-full" : ""
                   }`}
                 ></span>
 
                 {/* Hover effect */}
                 <span className="absolute inset-0 rounded-lg bg-blue-500/10 scale-0 group-hover:scale-100 transition-transform duration-300 -z-10"></span>
-              </button>
+              </Link>
             ))}
           </div>
 
-          {/* Contact Button with enhanced animation */}
-          <button className="hidden md:flex bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 relative overflow-hidden group">
+          {/* Contact Button */}
+          <Link
+            to="contact"
+            spy={true}
+            smooth={true}
+            offset={-80}
+            duration={800}
+            className="hidden md:flex bg-[#4FC3F7] hover:bg-[#4FC3F7] text-white px-6 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 relative overflow-hidden group cursor-pointer"
+          >
             <span className="relative z-10">Contact Me</span>
             <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-600"></span>
-          </button>
+          </Link>
 
-          {/* Mobile Menu Button with enhanced animation */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-all duration-300 transform hover:scale-110"
@@ -162,16 +150,22 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation with enhanced animations */}
+        {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
             {navItems.map((item, index) => (
-              <button
+              <Link
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:translate-x-2 ${
+                to={item.id}
+                spy={true}
+                smooth={true}
+                offset={-80}
+                duration={800}
+                onSetActive={() => setActiveSection(item.id)}
+                onClick={() => setIsOpen(false)}
+                className={`block w-full text-left px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:translate-x-2 cursor-pointer ${
                   activeSection === item.id
-                    ? "bg-blue-50 text-blue-600 font-semibold shadow-md scale-105"
+                    ? "bg-blue-50 text-[#4FC3F7] font-semibold shadow-md scale-105"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
                 style={{
@@ -179,11 +173,19 @@ export default function Navbar() {
                 }}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
-            <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+            <Link
+              to="contact"
+              spy={true}
+              smooth={true}
+              offset={-80}
+              duration={800}
+              onClick={() => setIsOpen(false)}
+              className="w-full bg-[#4FC3F7] hover:bg-[#4FC3F7] text-white px-4 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg cursor-pointer block text-center"
+            >
               Contact Me
-            </button>
+            </Link>
           </div>
         )}
       </div>

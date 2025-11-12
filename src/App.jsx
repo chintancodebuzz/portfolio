@@ -7,11 +7,13 @@ import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Projects from "./components/Projects";
 import Services from "./components/Services";
+import ScrollToTopEnhanced from "./layout/ScrollToTop";
+import ScrollToTop from "./layout/ScrollToTop";
 
 function App() {
   return (
     <Router>
-      <div className="overflow-x-hidden">
+      <div>
         <Navbar />
         {/* Main content with IDs for navigation */}
         <main>
@@ -35,6 +37,8 @@ function App() {
           </section>
         </main>
         <Footer />
+
+        <ScrollToTop/>
       </div>
     </Router>
   );

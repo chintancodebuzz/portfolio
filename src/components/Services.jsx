@@ -56,6 +56,7 @@ const Services = () => {
               <div
                 className="h-full p-4 sm:p-6 md:p-8 rounded-3xl transition-all duration-300 group-hover:shadow-xl border-2 border-transparent group-hover:border-white"
                 style={{
+                  
                   background:
                     "linear-gradient(145.94deg, rgba(235, 253, 255, 0.8) 7.83%, rgba(255, 255, 255, 0) 79.83%)",
                   boxShadow:
@@ -66,7 +67,7 @@ const Services = () => {
                   className="group-hover:absolute group-hover:inset-0 group-hover:rounded-3xl group-hover:z-0"
                   style={{
                     background:
-                      "linear-gradient(299.48deg, #0A84FF 7.82%, #CAEFFF 79.39%)",
+                      "linear-gradient(299.48deg, #4FC3F7 7.82%, #CAEFFF 79.39%)",
                   }}
                 ></div>
 
